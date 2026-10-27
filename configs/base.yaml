@@ -1,0 +1,20 @@
+# Shared settings of Section 4 (every other file lists its overrides; train.py / eval.py merge the
+# file on top of humvis/config.py defaults, so base.yaml documents the protocol: Adam, lr 1e-3 / 1e-4
+# (backbone), batch 64, 140 epochs, x0.1 at 90 and 120, single-scale flip test, threshold 0.1, <= 30).
+OUTPUT_DIR: output
+WORKERS: 8
+PRINT_FREQ: 50
+AUTO_RESUME: true
+SEED: 0
+MODEL: {DEVICE: cuda}
+DATASET: {ROOT: data}
+TRAIN:
+  OPTIMIZER: adam
+  LR: 0.001
+  BACKBONE_LR: 0.0001
+  BATCH_SIZE: 64
+  END_EPOCH: 140
+  LR_STEPS: [90, 120]
+  LR_FACTOR: 0.1
+TEST: {FLIP_TEST: true, CENTER_THRESHOLD: 0.1, MAX_INSTANCES: 30, NMS_KERNEL: 3}
+CFG_NAME: base
