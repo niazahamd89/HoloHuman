@@ -1,0 +1,26 @@
+# Table 5, left block (HRNet-W48): FL=True, Ctr=False, Int=False, lambda_I=0.1, tau=0.05.
+OUTPUT_DIR: output
+WORKERS: 8
+PRINT_FREQ: 50
+AUTO_RESUME: true
+SEED: 0
+MODEL:
+  DEVICE: cuda
+  HEADS:
+    TASKS: [pose, seg]
+  BACKBONE: hrnet48
+  PRETRAINED: model_files/hrnetv2_w48_imagenet_pretrained.pth
+  IIA: {ENABLED: true, POSITIONAL: none}
+  GFD: {SPATIAL_ATTENTION: true, CHANNEL_ATTENTION: true, CENTER_OFFSET: true, WINDOW: 0}
+DATASET: {ROOT: data, DATASET: coco, TRAIN: train2017, TEST: val2017, NUM_KEYPOINTS: 17}
+TRAIN:
+  OPTIMIZER: adam
+  LR: 0.001
+  BACKBONE_LR: 0.0001
+  BATCH_SIZE: 64
+  END_EPOCH: 140
+  LR_STEPS: [90, 120]
+  LR_FACTOR: 0.1
+TEST: {FLIP_TEST: true, CENTER_THRESHOLD: 0.1, MAX_INSTANCES: 30, NMS_KERNEL: 3}
+LOSS: {CENTER_FOCAL: true, CONTRASTIVE: false, INTERACTION: false, INTERACTION_WEIGHT: 0.1, TEMPERATURE: 0.05}
+CFG_NAME: ablation_table5_loss_fl_coco

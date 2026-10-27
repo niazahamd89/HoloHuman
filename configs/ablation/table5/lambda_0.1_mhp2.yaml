@@ -1,0 +1,34 @@
+# Table 5, middle block (HRNet-W48): lambda_I = 0.1, tau = 0.05, all three loss terms.
+OUTPUT_DIR: output
+WORKERS: 8
+PRINT_FREQ: 50
+AUTO_RESUME: true
+SEED: 0
+MODEL:
+  DEVICE: cuda
+  HEADS:
+    TASKS: [part]
+  BACKBONE: hrnet48
+  PRETRAINED: model_files/hrnetv2_w48_imagenet_pretrained.pth
+  IIA: {ENABLED: true, POSITIONAL: none}
+  GFD: {SPATIAL_ATTENTION: true, CHANNEL_ATTENTION: true, CENTER_OFFSET: true, WINDOW: 0}
+DATASET:
+  ROOT: data
+  DATASET: mhp2
+  TRAIN: train
+  TEST: val
+  NUM_PARTS: 58
+  PART_FLIP_INDEX: [0, 1, 2, 3, 4, 6, 5, 8, 7, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 23,
+    22, 25, 24, 27, 26, 29, 28, 31, 30, 33, 32, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47,
+    48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58]
+TRAIN:
+  OPTIMIZER: adam
+  LR: 0.001
+  BACKBONE_LR: 0.0001
+  BATCH_SIZE: 64
+  END_EPOCH: 140
+  LR_STEPS: [90, 120]
+  LR_FACTOR: 0.1
+TEST: {FLIP_TEST: true, CENTER_THRESHOLD: 0.1, MAX_INSTANCES: 30, NMS_KERNEL: 3}
+LOSS: {CENTER_FOCAL: true, CONTRASTIVE: true, INTERACTION: true, INTERACTION_WEIGHT: 0.1, TEMPERATURE: 0.05}
+CFG_NAME: ablation_table5_lambda_0.1_mhp2
