@@ -1,0 +1,32 @@
+# Table 1, C-mhp1: part head trained on MHP v1.0 train (18 categories), initialized from C-part (Table 14 §, in-domain). Backbone HRNet-W32.
+OUTPUT_DIR: output
+WORKERS: 8
+PRINT_FREQ: 50
+AUTO_RESUME: true
+SEED: 0
+MODEL:
+  DEVICE: cuda
+  HEADS:
+    TASKS: [part]
+  BACKBONE: hrnet32
+  PRETRAINED: model_files/hrnetv2_w32_imagenet_pretrained.pth
+  IIA: {ENABLED: true, POSITIONAL: none}
+  GFD: {SPATIAL_ATTENTION: true, CHANNEL_ATTENTION: true, CENTER_OFFSET: true, WINDOW: 0}
+DATASET:
+  ROOT: data
+  DATASET: mhp1
+  TRAIN: train
+  TEST: val
+  NUM_PARTS: 18
+  PART_FLIP_INDEX: [0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 9, 11, 13, 12, 15, 14, 16, 17, 18]
+TRAIN:
+  OPTIMIZER: adam
+  LR: 0.001
+  BACKBONE_LR: 0.0001
+  BATCH_SIZE: 64
+  END_EPOCH: 140
+  LR_STEPS: [90, 120]
+  LR_FACTOR: 0.1
+  INIT_CHECKPOINT: output/main_mhp2_w32/final_state.pth
+TEST: {FLIP_TEST: true, CENTER_THRESHOLD: 0.1, MAX_INSTANCES: 30, NMS_KERNEL: 3}
+CFG_NAME: main_mhp1_w32

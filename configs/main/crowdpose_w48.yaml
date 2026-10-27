@@ -1,0 +1,36 @@
+# Table 1, C-crowd: pose head trained on CrowdPose trainval with the 14 native keypoints (Table 11 §, in-domain). Backbone HRNet-W48.
+OUTPUT_DIR: output
+WORKERS: 8
+PRINT_FREQ: 50
+AUTO_RESUME: true
+SEED: 0
+MODEL:
+  DEVICE: cuda
+  HEADS:
+    TASKS: [pose]
+  BACKBONE: hrnet48
+  PRETRAINED: model_files/hrnetv2_w48_imagenet_pretrained.pth
+  IIA: {ENABLED: true, POSITIONAL: none}
+  GFD: {SPATIAL_ATTENTION: true, CHANNEL_ATTENTION: true, CENTER_OFFSET: true, WINDOW: 0}
+DATASET:
+  ROOT: data
+  DATASET: crowdpose
+  TRAIN: trainval
+  TEST: test
+  NUM_KEYPOINTS: 14
+  FLIP_INDEX: [1, 0, 3, 2, 5, 4, 7, 6, 9, 8, 11, 10, 12, 13]
+TRAIN:
+  OPTIMIZER: adam
+  LR: 0.001
+  BACKBONE_LR: 0.0001
+  BATCH_SIZE: 64
+  END_EPOCH: 140
+  LR_STEPS: [90, 120]
+  LR_FACTOR: 0.1
+TEST:
+  FLIP_TEST: true
+  CENTER_THRESHOLD: 0.1
+  MAX_INSTANCES: 30
+  NMS_KERNEL: 3
+  OKS_SIGMAS: [0.79, 0.79, 0.72, 0.72, 0.62, 0.62, 1.07, 1.07, 0.87, 0.87, 0.89, 0.89, 0.79, 0.79]
+CFG_NAME: main_crowdpose_w48
