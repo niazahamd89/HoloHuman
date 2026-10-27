@@ -1,0 +1,25 @@
+# Table 8 (COCO keypoint val): backbone vit (humvis/backbones_extra.py); HR-W32 / HR-W48 rows = main/coco_w32.yaml / main/coco_w48.yaml.
+OUTPUT_DIR: output
+WORKERS: 8
+PRINT_FREQ: 50
+AUTO_RESUME: true
+SEED: 0
+MODEL:
+  DEVICE: cuda
+  HEADS:
+    TASKS: [pose, seg]
+  BACKBONE: vit
+  PRETRAINED: timm
+  IIA: {ENABLED: true, POSITIONAL: none}
+  GFD: {SPATIAL_ATTENTION: true, CHANNEL_ATTENTION: true, CENTER_OFFSET: true, WINDOW: 0}
+DATASET: {ROOT: data, DATASET: coco, TRAIN: train2017, TEST: val2017, NUM_KEYPOINTS: 17}
+TRAIN:
+  OPTIMIZER: adam
+  LR: 0.001
+  BACKBONE_LR: 0.0001
+  BATCH_SIZE: 64
+  END_EPOCH: 140
+  LR_STEPS: [90, 120]
+  LR_FACTOR: 0.1
+TEST: {FLIP_TEST: true, CENTER_THRESHOLD: 0.1, MAX_INSTANCES: 30, NMS_KERNEL: 3}
+CFG_NAME: ablation_table8_vit_coco
