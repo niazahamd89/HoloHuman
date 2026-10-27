@@ -1,0 +1,26 @@
+# Table 11 ‡: C-pose/seg (COCO train2017, HRNet-W48) evaluated on CrowdPose test without training
+# on CrowdPose; 17 -> 14 keypoints (eval.py converts automatically).
+OUTPUT_DIR: output
+WORKERS: 8
+PRINT_FREQ: 50
+AUTO_RESUME: true
+SEED: 0
+MODEL:
+  DEVICE: cuda
+  HEADS:
+    TASKS: [pose, seg]
+  BACKBONE: hrnet48
+  PRETRAINED: model_files/hrnetv2_w48_imagenet_pretrained.pth
+  IIA: {ENABLED: true, POSITIONAL: none}
+  GFD: {SPATIAL_ATTENTION: true, CHANNEL_ATTENTION: true, CENTER_OFFSET: true, WINDOW: 0}
+DATASET: {ROOT: data, DATASET: crowdpose, TRAIN: train2017, TEST: test, NUM_KEYPOINTS: 17}
+TRAIN:
+  OPTIMIZER: adam
+  LR: 0.001
+  BACKBONE_LR: 0.0001
+  BATCH_SIZE: 64
+  END_EPOCH: 140
+  LR_STEPS: [90, 120]
+  LR_FACTOR: 0.1
+TEST: {FLIP_TEST: true, CENTER_THRESHOLD: 0.1, MAX_INSTANCES: 30, NMS_KERNEL: 3, MODEL_FILE: output/main_coco_w48/final_state.pth}
+CFG_NAME: eval_crowdpose_cross_w48
